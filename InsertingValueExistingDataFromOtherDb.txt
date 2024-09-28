@@ -1,0 +1,43 @@
+How to insert one table's value into another db table( both databses on single source database )?
+
+1. Go to querry tool :
+2. Execute following querry for database linking enable.
+
+CREATE EXTENSION dblink;
+ 
+3.Extension will created after then,Following command will executed for inserting.
+
+INSERT INTO TableName (col_11, col_12,col_13)
+SELECT col_21, col_22, col_23 FROM dblink('dbname=YourDbname host=localhost port=5433 user=postgres password''YourPassword''',
+	'SELECT col_21, col_22, col_23 FROM Source_Tablename')
+As source_data (
+	col_21 col_21'sType,
+	col_22 col_22'sType,
+	col_23 col_23'sType
+	);
+==		==		==		==		==		=	=		==		==		==		=	=		==		==		==		==		==
+Example :
+	
+	
+INSERT INTO public."CompanyMaster"(
+    "Code", "Name", "Add1", "Add2", "City", "Pin", "State", "Country", "Mobile", "Email", "RegisterNumber", "TradeLicNo", "VatNo", "GST_IN", "MCurrency")
+SELECT code, desce, add1, add2, city, pin, state, country, mobile, email, reg_no, trade_lic_no, vat_no, gstin, mcurrency
+FROM dblink('dbname=Postgres_Covertor_Db host=localhost port=5433 user=postgres password=''P@ssw0rd''',
+            'SELECT code, desce, add1, add2, city, pin, state, country, mobile, email, reg_no, trade_lic_no, vat_no, gstin, mcurrency FROM company_master')
+AS source_data (
+    code double precision, 
+    desce character varying(255),
+    add1 character varying(255),
+    add2 character varying(255),
+    city character varying(255),
+    pin character varying(255),
+    state character varying(255),
+    country character varying(255),
+    mobile character varying(255),
+    email character varying(255),
+    reg_no character varying(255),
+    trade_lic_no character varying(255),
+    vat_no character varying(255),
+    gstin character varying(255),
+    mcurrency character varying(20)
+);
